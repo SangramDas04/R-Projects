@@ -1,0 +1,196 @@
+---
+title: "R Notebook Project"
+output:
+  html_document:
+    df_print: paged
+  word_document: 
+    toc: yes
+    keep_md: yes
+  pdf_document: default
+  html_notebook: default
+Author: Sangram Das
+---
+
+```{r}
+#### Reading a csv file ####
+
+superstore <- read.csv("Sample - Superstore (2) (1).csv",stringsAsFactors = F,header = T)
+View(superstore)
+
+```
+
+```{r}
+#### Installing and loading the packages ####
+
+install.packages("ggplot2")
+install.packages("dplyr")
+install.packages("magrittr")
+library(ggplot2)
+library(dplyr)
+library(magrittr)
+
+```
+
+States running in Profit
+
+```{r}
+#### States running in Profit ###
+# Here we have shown the states which are running in Profit. On the Y axis I have shown the states and on the X axis I have shown Profit #
+
+statewise_profit <- superstore %>% filter(Profit>0)
+ggplot(data=statewise_profit,aes(y=State,fill=State)) + geom_bar() + theme(plot.background = element_rect(fill="skyblue"))
+
+```
+
+
+
+
+
+
+
+
+
+
+States running in Loss
+
+```{r}
+#### States running in Loss ###
+# Here we have shown the states which are running in Loss. On the Y axis I have shown the states and on the X axis I have shown Loss #
+statewise_profit <- superstore %>% filter(Profit<0)
+ggplot(data=statewise_profit,aes(y=State,fill=State)) + geom_bar() +theme(plot.background = element_rect(fill="lightgreen"))
+```
+
+Total Sales
+
+```{r}
+#### Total Sales ####
+# Here I've shown the Total Sales earned by the store #
+total_sales <- sum(superstore$Sales)
+print(paste0("Total Sales is ",total_sales))
+```
+
+Total profit
+
+```{r}
+#### Total profit ####
+# Here I've shown the Total Profit earned by the store #
+total_profit <- sum(superstore$Profit)
+print(paste0("Total Profit is ",total_profit))
+```
+
+Total Quantity Sold
+
+```{r}
+#### Total Quantity Sold ####
+# Here I've shown the total Total Quantity Sold by the store #
+total_Quantitysold <- sum(superstore$Quantity)
+print(paste0("Total Quantity Sold is ",total_Quantitysold))
+```
+
+
+
+
+
+
+
+
+
+
+
+Category-wise Total-sales
+
+```{r}
+#### Category-wise Total-sales ####
+# Here I've shown the total Category-wise Total=Sales by the store. On the X axis I have shown the Category and on the Y axis I have shown the Total-Sales #
+superstore %>% select("Category","Sales","Profit","Quantity","Segment") -> Categorywise_Totalsales
+ggplot(data=Categorywise_Totalsales,aes(x=Category,fill = Sales)) + geom_bar(fill = "palegreen",col = "black")
+```
+
+Region-wise Total-sales
+
+```{r}
+#### Region-wise Total-sales ####
+# It will show the Region names (distinct values) #
+region <- superstore %>% distinct(Region)
+region
+```
+
+```{r}
+# Here I have calculated Region-wise Total-sales i.e. how much sales does the store is generating from each Region #
+region_sales <- superstore %>% group_by(Region) %>% summarise(Sales = as.integer(sum(Sales,na.rm = T))) %>% ungroup()
+region_sales
+```
+
+
+
+
+
+
+
+
+
+
+Segment-wise Total-Sales
+
+```{r}
+#### Segment-wise Total-Sales ####
+# Graphically represent the Segment=wise Sales data. Segment on the X axis and Total-Sales on the Y axis #
+ggplot(data = superstore, aes(x = Segment)) + geom_bar() + geom_bar(fill = "Skyblue",col = "black")
+```
+
+Segment-wise sales using Function
+
+```{r}
+#### Segment-wise sales ####
+# Written a function to graphically represent the Segment=wise Sales data. Segment on the X axis and Total-Sales on the Y axis #
+func <- function(col1_charactervalue, col2_numericvalue) {
+  ggplot(data = superstore, aes(x = get(col1_charactervalue), y = get(col2_numericvalue))) +
+    geom_bar(stat = "sum",fill = "skyblue",col = "black") +
+    labs(title = paste("Segment-wise Sales"), x = col1_charactervalue, y = col2_numericvalue)
+}
+func("Segment", "Sales") # Except "Segment" and "Sales" you can also put some other column names, but make sure that the                          #first argument will be of CHARACTER type and the second argument will be of "Numeric" type
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+State-wise sum of sales
+
+```{r}
+#### State-wise sum of sales ####
+# Calculating the State-wise Total-Sales and creating a new object #
+State_Sales <- superstore %>%
+  group_by(State) %>%
+  summarise(Totsales = as.integer(sum(Sales, na.rm = T))) %>%
+  ungroup()
+
+
+View(State_Sales)
+
+# Taking input from the user #
+
+statewisesales <- function(){
+  input1 <- as.integer(readline("Choose states from the following"))
+  input2 <- as.integer(readline("Choose states from the following"))
+  selected_states <- State_Sales[input1:input2,]
+  selected_states
+  #View(selected_states)
+  ggplot(data = selected_states,aes(x= State,y=Totsales)) +  geom_bar(stat = "identity",fill = "yellow",col = "red")
+  
+  }
+  
+statewisesales()
+
+View(selected_states)   ## it will show you the elements of the selected_states table 
+```
