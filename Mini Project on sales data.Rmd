@@ -45,12 +45,6 @@ ggplot(data=statewise_profit,aes(y=State,fill=State)) + geom_bar() + theme(plot.
 
 
 
-
-
-
-
-
-
 States running in Loss
 
 ```{r}
@@ -90,13 +84,6 @@ print(paste0("Total Quantity Sold is ",total_Quantitysold))
 
 
 
-
-
-
-
-
-
-
 Category-wise Total-sales
 
 ```{r}
@@ -124,12 +111,6 @@ region_sales
 
 
 
-
-
-
-
-
-
 Segment-wise Total-Sales
 
 ```{r}
@@ -150,15 +131,6 @@ func <- function(col1_charactervalue, col2_numericvalue) {
 }
 func("Segment", "Sales") # Except "Segment" and "Sales" you can also put some other column names, but make sure that the                          #first argument will be of CHARACTER type and the second argument will be of "Numeric" type
 ```
-
-
-
-
-
-
-
-
-
 
 
 
